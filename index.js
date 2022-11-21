@@ -57,23 +57,50 @@ app.get('/persons', (req, res) => {
 
 })
 app.get('/persons/:id', (req, res) => {
-    const searchId=req.params.id
-    for (person of listOfPeople){
-        if (person.id==searchId){
+    const searchId = req.params.id
+    for (person of listOfPeople) {
+        if (person.id == searchId) {
             res.send(person);
             return;
         }
     }
     res.status(404);
-    res.send({message: `Person ith Id ${searchId} not found!`});
+    res.send({ message: `Person ith Id ${searchId} not found!` });
 })
 app.post('/persons', (req, res) => {
     let newPerson = req.body;
-    newPerson.id=generateId();
+    newPerson.id = generateId();
     listOfPeople.push(newPerson);
     res.send(listOfPeople);
 })
+app.put('/persons/:id', (req, res) => {
+    let searchId = req.params.id;
+    const dataToUpdate = req.body;
 
+    for (let person of listOfPeople) {
+        if (searchId == person.id) {
+            person.name = dataToUpdate.name;
+            person.phone = dataToUpdate.phone;
+            res.send(person);
+            return;
+        }
+    }
+    res.status(404);
+    res.send({ message: `Person ith Id ${searchId} not found!` });
+
+})
+app.delete('/persons/:id', (req, res) => {
+    let searchId = req.params.id;
+   
+    for (let pos in listOfPeople) {
+        const personId=listOfPeople[pos].id
+        if (personId==searchId){
+           listOfPeople.splice(pos,1)
+            res.status(20);
+            
+        }
+}
+})
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
